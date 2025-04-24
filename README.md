@@ -1,5 +1,7 @@
 # aibou.nvim
 
+:construction: **WIP** :construction:
+
 aibou.nvim is an AI-powered pair programming partner.
 It captures code changes as you edit, and makes feedback on the fly.
 
