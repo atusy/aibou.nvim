@@ -5,7 +5,7 @@ It captures code changes as you edit, and makes feedback on the fly.
 
 NOTE: aibou (相棒) means "partner" in Japanese.
 
-``` lua
+```lua
 -- example setup with lazy.nvim
 {
     "atusy/aibou.nvim",
@@ -16,6 +16,10 @@ NOTE: aibou (相棒) means "partner" in Japanese.
         vim.keymap.set("n", "<leader>ai", function()
             require("aibou.codecompanion").start()
         end, { desc = "Start aibou" })
-    end
+    end,
 }
 ```
+
+## Demo
+
+<div><video controls src="https://github.com/user-attachments/assets/cfbd7ff8-051b-4815-85a0-027ad64bcbd4" muted="false"></video></div>
