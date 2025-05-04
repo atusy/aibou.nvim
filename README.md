@@ -25,3 +25,19 @@ NOTE: aibou (相棒) means "partner" in Japanese.
 ## Demo
 
 <div><video controls src="https://github.com/user-attachments/assets/cfbd7ff8-051b-4815-85a0-027ad64bcbd4" muted="false"></video></div>
+
+## Customization
+
+```lua
+require("aibou.codecompanion").start({
+  -- changing system and initial user prompts
+  system_prompt = "You are a helpful assistant.",
+  user_prompt = "#buffer\nBe a navigator of pair programming. I will send diff of the buffer",
+  -- configuring codecompanion chat
+  codecompanion = {
+    chat_args = {
+      adapter = "openai",
+    }
+  }
+})
+```
