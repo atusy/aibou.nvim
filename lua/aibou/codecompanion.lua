@@ -6,6 +6,7 @@ local state = {
 	buf_content = {}, ---@type table<integer, string>
 	diff_sizes = {}, ---@type integer[]
 	chat = {}, ---@type table<integer, table>
+	original_adapter = nil, ---@type string | nil
 }
 
 ---@param x integer[]
@@ -50,6 +51,21 @@ local function get_buf_data(buf)
 		error("diff is not a string") -- should be unreachable as it happens when result_type is indices
 	end
 	return content, nil
+end
+
+---@param adapter string | nil
+---@return nil
+local function switch_adapter(adapter)
+	if not adapter then
+		return
+	end
+
+	local codecompanion_config = require("codecompanion.config")
+	if not state.original_adapter then
+		state.original_adapter = codecompanion_config.strategies.chat.adapter
+	end
+
+	codecompanion_config.strategies.chat.adapter = adapter
 end
 
 ---@param buf integer
@@ -123,6 +139,19 @@ local function create_autocmd(buf, chat)
 		end,
 	})
 
+	if state.original_adapter then
+		vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
+			group = augroup,
+			buffer = chat.bufnr,
+			once = true,
+			callback = function()
+				switch_adapter(state.original_adapter)
+				state.original_adapter = nil
+				return true
+			end,
+		})
+	end
+
 	for _, b in ipairs({ buf, chat.bufnr }) do
 		vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
 			group = augroup,
@@ -171,8 +200,12 @@ end
 
 ---@param config AibouConfig?
 function M.start(config)
+	config = config or {}
 	local buf = vim.api.nvim_get_current_buf()
-	local chat = open_chat(buf, config or {})
+
+	switch_adapter(config.adapter)
+
+	local chat = open_chat(buf, config)
 	create_autocmd(buf, chat)
 end
 

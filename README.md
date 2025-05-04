@@ -22,6 +22,24 @@ NOTE: aibou (相棒) means "partner" in Japanese.
 }
 ```
 
+## Configuration
+
+aibou.nvim provides several configuration options:
+
+```lua
+require("aibou.codecompanion").start({
+    -- Customize the system prompt for the AI assistant
+    system_prompt = "You are a programming expert. Please provide advice on code.",
+    
+    -- Customize the initial user prompt when starting the conversation
+    user_prompt = "Lets start pair programming",
+    
+    -- Specify which adapter to use with CodeCompanion
+    -- If nil (default), the CodeCompanion's configured adapter will be used
+    adapter = "openai", -- can also be "anthropic", "ollama", etc.
+})
+```
+
 ## Demo
 
 <div><video controls src="https://github.com/user-attachments/assets/cfbd7ff8-051b-4815-85a0-027ad64bcbd4" muted="false"></video></div>

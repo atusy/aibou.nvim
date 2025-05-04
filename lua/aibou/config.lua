@@ -10,6 +10,7 @@ config = {
 		"Sometimes I'll share stuff that's not a diff, so just think about whether to look at the whole file or focus on a diff, or series of diffs. you got this! 🤔 Thanks a bunch! 🙏",
 	}, "\n"),
 	user_prompt = "Lets start pair programming",
+	adapter = nil,
 }
 
 return config
