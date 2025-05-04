@@ -183,6 +183,7 @@ function M.start(config)
 	local buf = vim.api.nvim_get_current_buf()
 	local chat = open_chat(buf, config or {})
 	create_autocmd(buf, chat)
+	return chat
 end
 
 return M
