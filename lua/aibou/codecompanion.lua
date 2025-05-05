@@ -137,18 +137,11 @@ local function create_autocmd(buf, chat)
 end
 
 ---@param buf integer
----@return table CodeCompanionChat
 ---@param config AibouConfig
-local function open_chat(buf, config)
-	local opened_chat = state.chat[buf]
-	if opened_chat and vim.api.nvim_buf_is_valid(opened_chat.bufnr) then
-		if not opened_chat.ui:is_visible() then
-			opened_chat.ui:open()
-		end
-		return opened_chat
-	end
-
-	local chat = require("codecompanion.strategies.chat").new({
+---@return CodeCompanion.ChatArgs
+local function configure_chat(buf, config)
+	local user_config = (config.codecompanion or {}).chat_args or {}
+	local default_config = {
 		messages = {
 			{
 				role = "system",
@@ -163,7 +156,23 @@ local function open_chat(buf, config)
 		},
 		context = require("codecompanion.utils.context").get(buf, {}),
 		opts = { ignore_system_prompts = true },
-	})
+	}
+	return vim.tbl_deep_extend("force", default_config, user_config)
+end
+
+---@param buf integer
+---@return table CodeCompanionChat
+---@param config AibouConfig
+local function open_chat(buf, config)
+	local opened_chat = state.chat[buf]
+	if opened_chat and vim.api.nvim_buf_is_valid(opened_chat.bufnr) then
+		if not opened_chat.ui:is_visible() then
+			opened_chat.ui:open()
+		end
+		return opened_chat
+	end
+
+	local chat = require("codecompanion.strategies.chat").new(configure_chat(buf, config))
 	chat:submit()
 	state.chat[buf] = chat
 	return chat
@@ -174,6 +183,7 @@ function M.start(config)
 	local buf = vim.api.nvim_get_current_buf()
 	local chat = open_chat(buf, config or {})
 	create_autocmd(buf, chat)
+	return chat
 end
 
 return M
